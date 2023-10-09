@@ -1,4 +1,5 @@
 from pygame import *
+from time import sleep
 
 win_width = 600
 win_height = 500
@@ -23,18 +24,17 @@ class GameSprite(sprite.Sprite):
 class Player(GameSprite):
     def update(self):
         keys = key.get_pressed()
-        if keys[K_w] and self.rect.y > 5:
-            self.rect.y -= self.speed
-        if keys[K_s] and self.rect.y < win_height - 80:
-            self.rect.y += self.speed
-        if keys[K_UP] and self.rect.y > 5:
-            self.rect.y -= self.speed
+        if keys[K_DOWN]:
+            self.rect.y -=200
+            '''self.rect.y +=200'''
+
+
         if keys[K_DOWN] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
 
 
-chik =GameSprite('chik.jpg',200,200,10,60,60)
-egg = Player('egg.png', 0,200,10,30,100)
+chik =Player('pngegg.png',10,250,10,160,150)
+egg = Player('egg.png', 500,300,10,60,70)
 
 speed_x = 3
 speed_y = 3
@@ -46,21 +46,27 @@ finish = False
 while run:
     for e in event.get():
         if e.type == QUIT:
-            run = False    
+            run = False 
+        elif e.type == KEYDOWN:
+            if e.key == K_SPACE:
+                chik.rect.y -=200
+                
+        elif e.type == KEYUP:
+            if e.key == K_SPACE:
+                chik.rect.y +=200
+                
+        
+
+                
     window.blit(background, (0, 0))
     if finish != True:
-        egg.rect.x += speed_x
-        egg.rect.y += speed_y
-    if egg.rect.y > win_height-50 or egg.rect.y < 0:
-            speed_y *= -1
+        egg.rect.x -= speed_x
     if sprite.collide_rect(chik, egg):
-            speed_x *= -1
-    if egg.rect.x < 0:
         finish = True
-        window.blit(lose1, (200,200))
-    if egg.rect.x > win_width-50:
-        finish = True
-        window.blit(lose2, (200,200))
+        window.blit(lose1, (200, 200))
+            
+
+  
     
 
     chik.update()
@@ -69,6 +75,8 @@ while run:
     display.update()
     time.delay(50)
 
+    
+    
 
     
     
