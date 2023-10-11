@@ -1,7 +1,7 @@
 from pygame import *
 from time import sleep
 
-win_width = 600
+win_width = 900
 win_height = 500
 FPS = 60
 clock = time.Clock()
@@ -33,16 +33,20 @@ class Player(GameSprite):
             self.rect.y += self.speed
 
 
-chik =Player('pngegg.png',10,250,10,160,150)
-egg = Player('egg.png', 500,300,10,60,70)
+chik =Player('pngegg.png',100,350,10,160,150)
 
-speed_x = 3
-speed_y = 3
+egg = Player('egg.png', 1000,400,10,60,70)
+
+speed_x = 70
+
 font.init()
 font1 = font.Font(None, 35)
-lose1 = font1.render('The chiken hit!', True, (180, 0, 0))
-
+font2 = font.Font(None, 105)
+lose1 = font2.render('The chiken hit!', True, (180, 0, 0))
+win = font2.render('The chiken win!', True, (180, 0, 0))
+score=0
 finish = False
+health=3
 while run:
     for e in event.get():
         if e.type == QUIT:
@@ -50,10 +54,14 @@ while run:
         elif e.type == KEYDOWN:
             if e.key == K_SPACE:
                 chik.rect.y -=200
+               
                 
         elif e.type == KEYUP:
             if e.key == K_SPACE:
                 chik.rect.y +=200
+                
+            
+            
                 
         
 
@@ -62,8 +70,26 @@ while run:
     if finish != True:
         egg.rect.x -= speed_x
     if sprite.collide_rect(chik, egg):
+        health-=1
+        egg.kill()
+        egg = Player('egg.png', 1000,400,10,60,70)
+    if health==0: 
         finish = True
-        window.blit(lose1, (200, 200))
+        window.blit(lose1, (200, 150))
+    if egg.rect.x < -70:
+        egg.kill()
+        egg = Player('egg.png', 1000,400,10,60,70)
+        
+        if chik.rect.y==350:
+            score+=1
+    if score ==10: 
+        finish = True
+        window.blit(win, (200, 150))
+    text = font1.render("Перепрыгнул:" + str(score), 1, (255, 255, 255))
+    window.blit(text,(10,50))
+        
+    text_health = font1.render('жизни курочки:' + str(health), 1, (255, 255, 255))
+    window.blit(text_health,(10,80))
             
 
   
@@ -74,6 +100,9 @@ while run:
     egg.reset()
     display.update()
     time.delay(50)
+    
+    
+
 
     
     
